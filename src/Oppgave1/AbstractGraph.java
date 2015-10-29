@@ -196,6 +196,21 @@ public abstract class AbstractGraph<V> implements Graph<V> {
         }
     }
 
+    public Tree dfsStack(int v){
+        List<Integer> searchOrder = new ArrayList<>();
+        Deque<Integer> stack = new ArrayDeque<>();
+        boolean[] isVisited = new boolean[vertices.size()];
+        stack.addLast(v);
+        searchOrder.add(v);
+        while (stack.isEmpty() == false){
+            for(Integer e : getNeighbors(stack.pop())){
+                if(isVisited[e] == false){
+                    searchOrder.add(e);
+                }
+            }
+        }
+    }
+
     @Override /** Starting bfs search from vertex v */
     /** To be discussed in Section 28.7 */
     public Tree bfs(int v) {
