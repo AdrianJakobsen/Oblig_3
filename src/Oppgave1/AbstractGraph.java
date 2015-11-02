@@ -214,6 +214,9 @@ public abstract class AbstractGraph<V> implements Graph<V> {
             int neighbor = getUnvisitedNeighbor(currentIndex, isVisited);
                 if(neighbor == -1){
                     stack.pop();
+                    if(!stack.isEmpty()) {
+                        currentIndex = stack.peek();
+                    }
                 }else {
                     searchOrder.add(neighbor);
                     parent[neighbor] = currentIndex;
@@ -224,6 +227,7 @@ public abstract class AbstractGraph<V> implements Graph<V> {
             }
         return new Tree(index, parent, searchOrder);
     }
+
 
     /** jeg har lagt til denne koden */
     private int getUnvisitedNeighbor (int index, boolean[] isVisited){

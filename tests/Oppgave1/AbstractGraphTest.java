@@ -48,19 +48,23 @@ public class AbstractGraphTest {
 
     @Test
     public void someTest(){
-        String[] vertises = {"Oslo", "Bodø", "Tromsø", "Trondheim"};
+        Character[] vertises = {'A', 'B', 'C', 'D' };
+
         int[][] edges = {
-                {0,1}, {0,3},
-                {1,0}, {1,2}, {1,3},
-                {2,1}, {2,3},
-                {3,1}, {3,2}
+                {0, 1}, {0, 2},
+                {1, 0}, {1, 3},
+                {2, 0}, {2, 1},
+                {3, 1}
         };
-        AbstractGraph<String> graph = new AbstractGraph<String>(vertises, edges) {
+        AbstractGraph<Character> graph = new AbstractGraph<Character>(vertises, edges) {
             @Override
             public int getSize() {
                 return super.getSize();
             }
         };
+        assertEquals(graph.dfs(0).getSearchOrder(), graph.dfsStack(0).getSearchOrder());
     }
+
+
 
 }
