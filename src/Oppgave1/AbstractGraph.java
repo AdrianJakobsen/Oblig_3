@@ -268,6 +268,25 @@ public abstract class AbstractGraph<V> implements Graph<V> {
         return new Tree(v, parent, searchOrder);
     }
 
+    //jeg har laget denne
+    public List<Integer> getPath(int startVert, int endVert) {
+        LinkedList<Integer> shortestPath = new LinkedList<>();
+        Tree shortPathTree = bfs(startVert);
+        if(startVert == endVert){
+            shortestPath.add(shortPathTree.getRoot());
+            return shortestPath;
+        }
+        int nextParent = endVert;
+        while (true){
+            shortestPath.addFirst(nextParent);
+            nextParent = shortPathTree.getParent(nextParent);
+            if(nextParent == -1){
+                break;
+            }
+        }
+        return shortestPath;
+    }
+
     /** Tree inner class inside the AbstractGraph class */
     /** To be discussed in Section 28.5 */
     public class Tree {
