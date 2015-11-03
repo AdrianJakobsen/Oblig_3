@@ -47,7 +47,7 @@ public class AbstractGraphTest {
     }
 
     @Test
-    public void someTest(){
+    public void dfsStack_graphThatIsPointed_(){
         Character[] vertises = {'A', 'B', 'C', 'D' };
 
         int[][] edges = {
