@@ -1,13 +1,14 @@
 package Oppgave1;
 
 import Oppgave1.Graph;
+import sun.security.provider.certpath.Vertex;
 
 import java.util.*;
+import java.util.function.BooleanSupplier;
 
 public abstract class AbstractGraph<V> implements Graph<V> {
     protected List<V> vertices = new ArrayList<>(); // Store vertices
-    protected List<List<Edge>> neighbors
-            = new ArrayList<>(); // Adjacency lists
+    protected List<List<Edge>> neighbors = new ArrayList<>(); // Adjacency lists
 
     /** Construct an empty graph */
     protected AbstractGraph() {
@@ -237,6 +238,36 @@ public abstract class AbstractGraph<V> implements Graph<V> {
             }
         }
         return -1;
+    }
+    // jeg lager denne
+    public Boolean isCyclic() {
+        boolean[] isvisited = new boolean[vertices.size()];
+        int[] parent = new int[vertices.size()];
+        for (int i = 0; i < parent.length; i++) {
+            parent[i] = -1;
+        }
+        int currentIndex = 0;
+        LinkedList<Integer> queue = new LinkedList<>();
+        queue.offer(currentIndex);
+        isvisited[currentIndex] = true;
+        while (!queue.isEmpty()){
+            currentIndex = queue.poll();
+            for (Edge edge : neighbors.get(currentIndex)){
+                if (isvisited[edge.v] && edge.v != parent[currentIndex]){
+                    return true;
+                }else if (!isvisited[edge.v]){
+                    queue.offer(edge.v);
+                    parent[edge.v] = currentIndex;
+                    isvisited[edge.v] = true;
+                }
+            }
+        }
+        return false;
+    }
+    /** nice going dofus*/
+    public boolean isConnected() {
+        Tree bfs = bfs(0);
+        return  (bfs.getNumberOfVerticesFound() == vertices.size());
     }
 
     @Override /** Starting bfs search from vertex v */
