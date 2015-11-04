@@ -205,6 +205,26 @@ public class AbstractGraphTest {
     }
 
     @Test
+    public void isCyclic_ZeroIsNotConnected_returnTrue(){
+        String[] vertises = {"Oslo", "Bodø", "Tromsø", "Trondheim", "Bergen","Mo i Rana","Ørstad"};
+        int[][] edges = {
+                {1,2}, {1,4},
+                {2,1}, {2, 3}, {2, 5},
+                {3,2}, {3,5},
+                {4,1}, {4, 6},
+                {5,2}, {5,3}, {5,6},
+                {6,4}, {6,5}
+        };
+        AbstractGraph<String> graph = new AbstractGraph<String>(vertises, edges) {
+            @Override
+            public int getSize() {
+                return super.getSize();
+            }
+        };
+        assertEquals(true, graph.isCyclic());
+    }
+
+    @Test
     public void isCyclic_returnFalse(){
         Character[] vertises = {'A', 'B', 'C' };
 

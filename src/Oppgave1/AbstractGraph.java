@@ -241,21 +241,30 @@ public abstract class AbstractGraph<V> implements Graph<V> {
     }
     // jeg lager denne
     public Boolean isCyclic() {
+        for (int j = 0; j < vertices.size(); j++) {
+            if (isCyclicHelper(j)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isCyclicHelper(int current) {
         boolean[] isvisited = new boolean[vertices.size()];
         int[] parent = new int[vertices.size()];
         for (int i = 0; i < parent.length; i++) {
             parent[i] = -1;
         }
-        int currentIndex = 0;
+        int currentIndex = current;
         LinkedList<Integer> queue = new LinkedList<>();
         queue.offer(currentIndex);
         isvisited[currentIndex] = true;
-        while (!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             currentIndex = queue.poll();
-            for (Edge edge : neighbors.get(currentIndex)){
-                if (isvisited[edge.v] && edge.v != parent[currentIndex]){
+            for (Edge edge : neighbors.get(currentIndex)) {
+                if (isvisited[edge.v] && edge.v != parent[currentIndex]) {
                     return true;
-                }else if (!isvisited[edge.v]){
+                } else if (!isvisited[edge.v]) {
                     queue.offer(edge.v);
                     parent[edge.v] = currentIndex;
                     isvisited[edge.v] = true;
