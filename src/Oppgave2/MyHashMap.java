@@ -157,7 +157,6 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         }
 
         table[bucketIndex].add(new MyMap.Entry<K, V>(key, value));
-
         size++;
 
         return value;
