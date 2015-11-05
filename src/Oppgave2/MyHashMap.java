@@ -1,6 +1,10 @@
 package Oppgave2;
 
+import jdk.internal.org.objectweb.asm.tree.analysis.Value;
+
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 public class MyHashMap<K, V> implements MyMap<K, V> {
     // Define the default hash table size. Must be a power of 2
@@ -77,8 +81,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 
     @Override /** Return a set of entries in the map */
     public java.util.Set<MyMap.Entry<K,V>> entrySet() {
-        java.util.Set<MyMap.Entry<K, V>> set =
-                new java.util.HashSet<>();
+        java.util.Set<MyMap.Entry<K, V>> set = new java.util.HashSet<>();
 
         for (int i = 0; i < capacity; i++) {
             if (table[i] != null) {
@@ -91,14 +94,32 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         return set;
     }
 
-    @Override /** Return the value that matches the specified key */
+
+    @Override
     public V get(K key) {
         int bucketIndex = hash(key.hashCode());
         if (table[bucketIndex] != null) {
             LinkedList<Entry<K, V>> bucket = table[bucketIndex];
             for (Entry<K, V> entry: bucket)
                 if (entry.getKey().equals(key))
-                    return entry.getValue();
+                    return entry.getValue().getFirst();
+        }
+
+        return null;
+    }
+
+    public Set<V> getAll(K key) {
+        int bucketIndex = hash(key.hashCode());
+        Set<V> setOfValues = new HashSet<>();
+        if (table[bucketIndex] != null) {
+            LinkedList<Entry<K, V>> bucket = table[bucketIndex];
+            for (Entry<K, V> entry: bucket)
+                if (entry.getKey().equals(key)) {
+                    for (V value : entry.getValue()) {
+                        setOfValues.add(value);
+                    }
+                    return setOfValues;
+                }
         }
 
         return null;
@@ -131,11 +152,8 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
             LinkedList<Entry<K, V>> bucket = table[bucketIndex];
             for (Entry<K, V> entry: bucket)
                 if (entry.getKey().equals(key)) {
-                    V oldValue = entry.getValue();
-                    // Replace old value with new value
-                    entry.value = value;
-                    // Return the old value for the key
-                    return oldValue;
+                    entry.value.addLast(value);
+                    return entry.value.getLast();
                 }
         }
 
@@ -183,7 +201,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         return size;
     }
 
-    @Override /** Return a set consisting of the values in this map */
+    @Override /** Return a set consisting of the values in this map *///endret på
     public java.util.Set<V> values() {
         java.util.Set<V> set = new java.util.HashSet<>();
 
@@ -191,7 +209,8 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
             if (table[i] != null) {
                 LinkedList<Entry<K, V>> bucket = table[i];
                 for (Entry<K, V> entry: bucket)
-                    set.add(entry.getValue());
+                    for (V value : entry.getValue())
+                        set.add(value);
             }
         }
 
@@ -236,7 +255,8 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         size = 0; // Reset size to 0
 
         for (Entry<K, V> entry: set) {
-            put(entry.getKey(), entry.getValue()); // Store to new table
+            for (V value : entry.value)
+                put(entry.getKey(), value); // Store to new table
         }
     }
 

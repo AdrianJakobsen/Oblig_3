@@ -1,5 +1,7 @@
 package Oppgave2;
 
+import java.util.LinkedList;
+
 public interface MyMap<K, V> {
     /** Remove all of the entries from this map */
     public void clear();
@@ -37,18 +39,19 @@ public interface MyMap<K, V> {
     /** Define inner class for Entry */
     public static class Entry<K, V> {
         K key;
-        V value;
+        LinkedList<V> value;
 
         public Entry(K key, V value) {
             this.key = key;
-            this.value = value;
+            this.value = new LinkedList<V>();
+            this.value.addLast(value);
         }
 
         public K getKey() {
             return key;
         }
 
-        public V getValue() {
+        public LinkedList<V> getValue() {
             return value;
         }
 
