@@ -28,11 +28,11 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
     }
 
     public MyHashMap(int initialCapacity, float loadFactorThreshold) {
-        if (initialCapacity > MAXIMUM_CAPACITY)
+        if (initialCapacity > MAXIMUM_CAPACITY) {
             this.capacity = MAXIMUM_CAPACITY;
-        else
+        }else {
             this.capacity = trimToPowerOf2(initialCapacity);
-
+        }
         this.loadFactorThreshold = loadFactorThreshold;
         table = new LinkedList[capacity];
     }
@@ -45,10 +45,11 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 
     @Override
     public boolean containsKey(K key) {
-        if (get(key) != null)
+        if (get(key) != null) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
     @Override
@@ -56,9 +57,11 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         for (int i = 0; i < capacity; i++) {
             if (table[i] != null) {
                 LinkedList<Entry<K, V>> bucket = table[i];
-                for (Entry<K, V> entry: bucket)
-                    if (entry.getValue().equals(value))
+                for (Entry<K, V> entry: bucket){
+                    if (entry.getValue().equals(value)) {
                         return true;
+                    }
+                }
             }
         }
 
@@ -72,11 +75,11 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         for (int i = 0; i < capacity; i++) {
             if (table[i] != null) {
                 LinkedList<Entry<K, V>> bucket = table[i];
-                for (Entry<K, V> entry: bucket)
+                for (Entry<K, V> entry: bucket) {
                     set.add(entry);
+                }
             }
         }
-
         return set;
     }
 
@@ -86,11 +89,12 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         int bucketIndex = hash(key.hashCode());
         if (table[bucketIndex] != null) {
             LinkedList<Entry<K, V>> bucket = table[bucketIndex];
-            for (Entry<K, V> entry: bucket)
-                if (entry.getKey().equals(key))
+            for (Entry<K, V> entry: bucket) {
+                if (entry.getKey().equals(key)) {
                     return entry.getValue().getFirst();
+                }
+            }
         }
-
         return null;
     }
 
@@ -99,13 +103,14 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         Set<V> setOfValues = new HashSet<>();
         if (table[bucketIndex] != null) {
             LinkedList<Entry<K, V>> bucket = table[bucketIndex];
-            for (Entry<K, V> entry: bucket)
+            for (Entry<K, V> entry: bucket) {
                 if (entry.getKey().equals(key)) {
                     for (V value : entry.getValue()) {
                         setOfValues.add(value);
                     }
                     return setOfValues;
                 }
+            }
         }
 
         return null;
@@ -123,11 +128,11 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         for (int i = 0; i < capacity; i++) {
             if (table[i] != null) {
                 LinkedList<Entry<K, V>> bucket = table[i];
-                for (Entry<K, V> entry: bucket)
+                for (Entry<K, V> entry: bucket) {
                     set.add(entry.getKey());
+                }
             }
         }
-
         return set;
     }
 
@@ -136,17 +141,18 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         if (get(key) != null) {
             int bucketIndex = hash(key.hashCode());
             LinkedList<Entry<K, V>> bucket = table[bucketIndex];
-            for (Entry<K, V> entry: bucket)
+            for (Entry<K, V> entry: bucket) {
                 if (entry.getKey().equals(key)) {
                     entry.value.addLast(value);
                     return entry.value.getLast();
                 }
+            }
         }
 
         if (size >= capacity * loadFactorThreshold) {
-            if (capacity == MAXIMUM_CAPACITY)
+            if (capacity == MAXIMUM_CAPACITY) {
                 throw new RuntimeException("Exceeding maximum capacity");
-
+            }
             rehash();
         }
 
@@ -168,12 +174,13 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 
         if (table[bucketIndex] != null) {
             LinkedList<Entry<K, V>> bucket = table[bucketIndex];
-            for (Entry<K, V> entry: bucket)
+            for (Entry<K, V> entry: bucket) {
                 if (entry.getKey().equals(key)) {
                     bucket.remove(entry);
                     size--;
                     break;
                 }
+            }
         }
     }
 
@@ -189,9 +196,11 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         for (int i = 0; i < capacity; i++) {
             if (table[i] != null) {
                 LinkedList<Entry<K, V>> bucket = table[i];
-                for (Entry<K, V> entry: bucket)
-                    for (V value : entry.getValue())
+                for (Entry<K, V> entry: bucket) {
+                    for (V value : entry.getValue()) {
                         set.add(value);
+                    }
+                }
             }
         }
 
@@ -231,8 +240,9 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         size = 0;
 
         for (Entry<K, V> entry: set) {
-            for (V value : entry.value)
+            for (V value : entry.value) {
                 put(entry.getKey(), value);
+            }
         }
     }
 
@@ -241,11 +251,13 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         StringBuilder builder = new StringBuilder("[");
 
         for (int i = 0; i < capacity; i++) {
-            if (table[i] != null && table[i].size() > 0)
-                for (Entry<K, V> entry: table[i])
-                    builder.append(entry);
-        }
+            if (table[i] != null && table[i].size() > 0) {
+                for (Entry<K, V> entry : table[i]) {
 
+                    builder.append(entry);
+                }
+            }
+        }
         builder.append("]");
         return builder.toString();
     }
