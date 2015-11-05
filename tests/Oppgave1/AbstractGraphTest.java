@@ -9,7 +9,7 @@ public class AbstractGraphTest {
 
 
     @Test
-    public void dfsStack_returnTheSameAsRecursiveDFS_true(){
+    public void dfsStack_returnTraversalTree_true(){
           String[] vertises = {"Oslo", "Bodø", "Tromsø", "Trondheim"};
           int[][] edges = {
                 {0,1}, {0,3},
@@ -30,7 +30,7 @@ public class AbstractGraphTest {
 
 
     @Test(expected = IndexOutOfBoundsException.class)
-    public void dfsStack_sendInAnNonExistentIndex_(){
+    public void dfsStack_sendInAnNonExistentIndex_Exception(){
         String[] vertises = {"Oslo", "Bodø", "Tromsø", "Trondheim"};
         int[][] edges = {
                 {0,1}, {0,3},
@@ -48,7 +48,7 @@ public class AbstractGraphTest {
     }
 
     @Test
-    public void dfsStack_graphThatIsPointed_(){
+    public void dfsStack_graphThatIsPointed_ZeroOneThreeTwo(){
         Character[] vertises = {'A', 'B', 'C', 'D' };
 
         int[][] edges = {
@@ -67,7 +67,7 @@ public class AbstractGraphTest {
     }
 
     @Test
-    public void getPath_startRootEndRoot_0(){
+    public void getPath_startRootEndRoot_zero(){
         String[] vertises = {"Oslo", "Bodø", "Tromsø", "Trondheim"};
         int[][] edges = {
                 {0,1}, {0,3},
@@ -225,7 +225,7 @@ public class AbstractGraphTest {
     }
 
     @Test
-    public void isCyclic_returnFalse(){
+    public void isCyclic_graphIsNotCyclic_returnFalse(){
         Character[] vertises = {'A', 'B', 'C' };
 
         int[][] edges = {
@@ -243,7 +243,7 @@ public class AbstractGraphTest {
     }
 
     @Test
-    public void isConnected_returnTrue(){
+    public void isConnected_graphIsCyclic_returnTrue(){
         String[] vertises = {"Oslo", "Bodø", "Tromsø", "Trondheim", "Bergen","Mo i Rana","Ørstad"};
         int[][] edges = {
                 {0,1}, {0,2},
@@ -264,7 +264,7 @@ public class AbstractGraphTest {
     }
 
     @Test
-    public void isConnected2_returnTrue(){
+    public void isConnected_pointedGraphIsconnected_returnTrue(){
         Character[] vertises = {'A', 'B', 'C' };
 
         int[][] edges = {
@@ -282,7 +282,7 @@ public class AbstractGraphTest {
     }
 
     @Test
-    public void isConnected_returnFalse(){
+    public void isConnected_oneNodeHasNoEdges_returnFalse(){
         String[] vertises = {"Oslo", "Bodø", "Tromsø", "Trondheim", "Bergen","Mo i Rana","Ørstad", "Vallhala"};
         int[][] edges = {
                 {0,1}, {0,2},

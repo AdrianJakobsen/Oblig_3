@@ -44,7 +44,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void put_addSixEntrysSomeHaveSameKey_size3(){
+    public void put_addSixEntrysSomeHaveSameKey_sizeThree(){
         hashMap = new MyHashMap();
         hashMap.put("pai", "sword");
         hashMap.put("Random", "shit");
@@ -98,7 +98,7 @@ public class MyHashMapTest {
     }
 
     @Test
-    public void getAll_AddDiffrentValueObjects_(){
+    public void getAll_AddDiffrentValueObjects_APai123(){
         hashMap = new MyHashMap();
         hashMap.put("key", 123);
         hashMap.put("key", "pai");
