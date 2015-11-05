@@ -164,8 +164,8 @@ public abstract class AbstractGraph<V> implements Graph<V> {
         return new Tree(indexOfVertex, parent, searchOrder);
     }
 
-    private void dfs(int indexOfVertex, int[] parent, List<Integer> searchOrder,
-                     boolean[] isVisited) {
+    private void dfs(int indexOfVertex, int[] parent, List<Integer> searchOrder, boolean[] isVisited) {
+
         searchOrder.add(indexOfVertex);
         isVisited[indexOfVertex] = true;
 
