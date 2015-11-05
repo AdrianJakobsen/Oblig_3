@@ -133,7 +133,7 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
 
     @Override
     public V put(K key, V value) {
-        if (get(key) != null) { // The key is already in the map
+        if (get(key) != null) {
             int bucketIndex = hash(key.hashCode());
             LinkedList<Entry<K, V>> bucket = table[bucketIndex];
             for (Entry<K, V> entry: bucket)

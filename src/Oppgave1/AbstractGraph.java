@@ -3,8 +3,8 @@ package Oppgave1;
 import java.util.*;
 
 public abstract class AbstractGraph<V> implements Graph<V> {
-    protected List<V> vertices = new ArrayList<>(); // Store vertices
-    protected List<List<Edge>> neighbors = new ArrayList<>(); // Adjacency lists
+    protected List<V> vertices = new ArrayList<>();
+    protected List<List<Edge>> neighbors = new ArrayList<>();
 
     protected AbstractGraph() {
     }
@@ -25,14 +25,14 @@ public abstract class AbstractGraph<V> implements Graph<V> {
 
     protected AbstractGraph(List<Edge> edges, int numberOfVertices) {
         for (int i = 0; i < numberOfVertices; i++)
-            addVertex((V)(new Integer(i))); // vertices is {0, 1, ...}
+            addVertex((V)(new Integer(i)));
 
         createAdjacencyLists(edges, numberOfVertices);
     }
 
     protected AbstractGraph(int[][] edges, int numberOfVertices) {
         for (int i = 0; i < numberOfVertices; i++)
-            addVertex((V)(new Integer(i))); // vertices is {0, 1, ...}
+            addVertex((V)(new Integer(i)));
 
         createAdjacencyLists(edges, numberOfVertices);
     }
@@ -47,7 +47,7 @@ public abstract class AbstractGraph<V> implements Graph<V> {
     private void createAdjacencyLists(
             List<Edge> edges, int numberOfVertices) {
         for (Edge edge: edges) {
-            addEdge(edge.u, edge.v);
+            addEdge(edge.startVertex, edge.endVertex);
         }
     }
 
@@ -67,22 +67,22 @@ public abstract class AbstractGraph<V> implements Graph<V> {
     }
 
     @Override
-    public int getIndex(V v) {
-        return vertices.indexOf(v);
+    public int getIndex(V vertex) {
+        return vertices.indexOf(vertex);
     }
 
     @Override
     public List<Integer> getNeighbors(int index) {
         List<Integer> result = new ArrayList<>();
         for (Edge e: neighbors.get(index))
-            result.add(e.v);
+            result.add(e.endVertex);
 
         return result;
     }
 
     @Override
-    public int getDegree(int v) {
-        return neighbors.get(v).size();
+    public int getDegree(int vertex) {
+        return neighbors.get(vertex).size();
     }
 
     @Override
@@ -90,8 +90,8 @@ public abstract class AbstractGraph<V> implements Graph<V> {
         for (int u = 0; u < neighbors.size(); u++) {
             System.out.print(getVertex(u) + " (" + u + "): ");
             for (Edge e: neighbors.get(u)) {
-                System.out.print("(" + getVertex(e.u) + ", " +
-                        getVertex(e.v) + ") ");
+                System.out.print("(" + getVertex(e.startVertex) + ", " +
+                        getVertex(e.endVertex) + ") ");
             }
             System.out.println();
         }
@@ -115,15 +115,15 @@ public abstract class AbstractGraph<V> implements Graph<V> {
         }
     }
 
-    protected boolean addEdge(Edge e) {
-        if (e.u < 0 || e.u > getSize() - 1)
-            throw new IllegalArgumentException("No such index: " + e.u);
+    protected boolean addEdge(Edge edge) {
+        if (edge.startVertex < 0 || edge.startVertex > getSize() - 1)
+            throw new IllegalArgumentException("No such index: " + edge.startVertex);
 
-        if (e.v < 0 || e.v > getSize() - 1)
-            throw new IllegalArgumentException("No such index: " + e.v);
+        if (edge.endVertex < 0 || edge.endVertex > getSize() - 1)
+            throw new IllegalArgumentException("No such index: " + edge.endVertex);
 
-        if (!neighbors.get(e.u).contains(e)) {
-            neighbors.get(e.u).add(e);
+        if (!neighbors.get(edge.startVertex).contains(edge)) {
+            neighbors.get(edge.startVertex).add(edge);
             return true;
         }
         else {
@@ -132,52 +132,52 @@ public abstract class AbstractGraph<V> implements Graph<V> {
     }
 
     @Override
-    public boolean addEdge(int u, int v) {
-        return addEdge(new Edge(u, v));
+    public boolean addEdge(int startVertex, int endVertex) {
+        return addEdge(new Edge(startVertex, endVertex));
     }
 
     public static class Edge {
-        public int u; // Starting vertex of the edge
-        public int v; // Ending vertex of the edge
+        public int startVertex;
+        public int endVertex;
 
-        public Edge(int u, int v) {
-            this.u = u;
-            this.v = v;
+        public Edge(int startVertex, int endVertex) {
+            this.startVertex = startVertex;
+            this.endVertex = endVertex;
         }
 
-        public boolean equals(Object o) {
-            return u == ((Edge)o).u && v == ((Edge)o).v;
+        public boolean equals(Object obj) {
+            return startVertex == ((Edge)obj).startVertex && endVertex == ((Edge)obj).endVertex;
         }
     }
 
     @Override
-    public Tree dfs(int v) {
+    public Tree dfs(int indexOfVertex) {
         List<Integer> searchOrder = new ArrayList<>();
         int[] parent = new int[vertices.size()];
         for (int i = 0; i < parent.length; i++)
-            parent[i] = -1; // Initialize parent[i] to -1
+            parent[i] = -1;
 
         boolean[] isVisited = new boolean[vertices.size()];
 
-        dfs(v, parent, searchOrder, isVisited);
+        dfs(indexOfVertex, parent, searchOrder, isVisited);
 
-        return new Tree(v, parent, searchOrder);
+        return new Tree(indexOfVertex, parent, searchOrder);
     }
 
-    private void dfs(int u, int[] parent, List<Integer> searchOrder,
+    private void dfs(int indexOfVertex, int[] parent, List<Integer> searchOrder,
                      boolean[] isVisited) {
-        searchOrder.add(u);
-        isVisited[u] = true;
+        searchOrder.add(indexOfVertex);
+        isVisited[indexOfVertex] = true;
 
-        for (Edge e : neighbors.get(u)) {
-            if (!isVisited[e.v]) {
-                parent[e.v] = u;
-                dfs(e.v, parent, searchOrder, isVisited);
+        for (Edge edge : neighbors.get(indexOfVertex)) {
+            if (!isVisited[edge.endVertex]) {
+                parent[edge.endVertex] = indexOfVertex;
+                dfs(edge.endVertex, parent, searchOrder, isVisited);
             }
         }
     }
 
-    public Tree dfsStack(int index) {
+    public Tree dfsStack(int indexOfVertex) {
         List<Integer> searchOrder = new ArrayList<>();
         Deque<Integer> stack = new ArrayDeque<>();
         boolean[] isVisited = new boolean[vertices.size()];
@@ -185,7 +185,7 @@ public abstract class AbstractGraph<V> implements Graph<V> {
         for (int i = 0; i < parent.length; i++){
             parent[i] = -1;
         }
-        int currentIndex = index;
+        int currentIndex = indexOfVertex;
 
         stack.push(currentIndex);
         searchOrder.add(currentIndex);
@@ -205,7 +205,7 @@ public abstract class AbstractGraph<V> implements Graph<V> {
                     currentIndex = neighbor;
                 }
             }
-        return new Tree(index, parent, searchOrder);
+        return new Tree(indexOfVertex, parent, searchOrder);
     }
 
 
@@ -240,12 +240,12 @@ public abstract class AbstractGraph<V> implements Graph<V> {
         while (!queue.isEmpty()) {
             currentIndex = queue.poll();
             for (Edge edge : neighbors.get(currentIndex)) {
-                if (isvisited[edge.v] && edge.v != parent[currentIndex]) {
+                if (isvisited[edge.endVertex] && edge.endVertex != parent[currentIndex]) {
                     return true;
-                } else if (!isvisited[edge.v]) {
-                    queue.offer(edge.v);
-                    parent[edge.v] = currentIndex;
-                    isvisited[edge.v] = true;
+                } else if (!isvisited[edge.endVertex]) {
+                    queue.offer(edge.endVertex);
+                    parent[edge.endVertex] = currentIndex;
+                    isvisited[edge.endVertex] = true;
                 }
             }
         }
@@ -274,10 +274,10 @@ public abstract class AbstractGraph<V> implements Graph<V> {
             int u = queue.poll();
             searchOrder.add(u);
             for (Edge e: neighbors.get(u)) {
-                if (!isVisited[e.v]) {
-                    queue.offer(e.v);
-                    parent[e.v] = u;
-                    isVisited[e.v] = true;
+                if (!isVisited[e.endVertex]) {
+                    queue.offer(e.endVertex);
+                    parent[e.endVertex] = u;
+                    isVisited[e.endVertex] = true;
                 }
             }
         }
@@ -285,14 +285,14 @@ public abstract class AbstractGraph<V> implements Graph<V> {
         return new Tree(v, parent, searchOrder);
     }
 
-    public List<Integer> getPath(int startVert, int endVert) {
+    public List<Integer> getPath(int startVertex, int endVertex) {
         LinkedList<Integer> shortestPath = new LinkedList<>();
-        Tree shortPathTree = bfs(startVert);
-        if(startVert == endVert){
+        Tree shortPathTree = bfs(startVertex);
+        if(startVertex == endVertex){
             shortestPath.add(shortPathTree.getRoot());
             return shortestPath;
         }
-        int nextParent = endVert;
+        int nextParent = endVertex;
         while (true){
             shortestPath.addFirst(nextParent);
             nextParent = shortPathTree.getParent(nextParent);
@@ -304,9 +304,9 @@ public abstract class AbstractGraph<V> implements Graph<V> {
     }
 
     public class Tree {
-        private int root; // The root of the tree
-        private int[] parent; // Store the parent of each vertex
-        private List<Integer> searchOrder; // Store the search order
+        private int root;
+        private int[] parent;
+        private List<Integer> searchOrder;
 
         public Tree(int root, int[] parent, List<Integer> searchOrder) {
             this.root = root;
@@ -355,7 +355,6 @@ public abstract class AbstractGraph<V> implements Graph<V> {
             System.out.print("Edges: ");
             for (int i = 0; i < parent.length; i++) {
                 if (parent[i] != -1) {
-                    // Display an edge
                     System.out.print("(" + vertices.get(parent[i]) + ", " +
                             vertices.get(i) + ") ");
                 }
